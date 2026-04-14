@@ -12,27 +12,12 @@ const app = express();
 // Database Connection
 connectDB();
 
-
-const allowedOrigins = [
-    'http://localhost:5173',
-    'https://es-magico-mern-stack-developer-assi.vercel.app'
-];
-
+// ✅ SABSE SIMPLE CORS: Isse error aane ka chance 0% hai
 app.use(cors({
-    origin: function (origin, callback) {
-        
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    credentials: true,
-    optionsSuccessStatus: 200 
+    origin: '*', // Sabhi jagah se access allow karega
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
 
 app.use(express.json());
 
@@ -41,6 +26,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 
+// Health Check
 app.get('/', (req, res) => {
     res.send("Es-Magico API is running successfully...");
 });
