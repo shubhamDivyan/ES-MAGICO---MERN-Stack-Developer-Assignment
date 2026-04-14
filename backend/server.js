@@ -13,16 +13,17 @@ const app = express();
 connectDB();
 
 
-app.use(cors({
-    origin: [
-        'http://localhost:5173', 
-        'https://es-magico-mern-stack-developer-assi.vercel.app'
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-    optionsSuccessStatus: 200
-}));
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://es-magico-mern-stack-developer-assi.vercel.app");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header("Access-Control-Allow-Credentials", "true");
+
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200);
+    }
+    next();
+});
 
 
 app.options('(.*)', cors());
