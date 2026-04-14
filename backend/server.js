@@ -12,9 +12,9 @@ const app = express();
 // Database Connection
 connectDB();
 
-// ✅ SABSE SIMPLE CORS: Isse error aane ka chance 0% hai
+
 app.use(cors({
-    origin: '*', // Sabhi jagah se access allow karega
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
