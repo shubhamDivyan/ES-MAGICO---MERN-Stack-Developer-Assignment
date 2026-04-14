@@ -9,26 +9,35 @@ const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
 
-// Database Connection
+
 connectDB();
 
 
 app.use(cors({
-    origin: '*',
+    origin: [
+        'http://localhost:5173', 
+        'https://es-magico-mern-stack-developer-assi.vercel.app'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    optionsSuccessStatus: 200
 }));
+
+
+app.options('*', cors()); 
+
 
 app.use(express.json());
 
-// API Routes
+
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 
-// Health Check
+
 app.get('/', (req, res) => {
-    res.send("Es-Magico API is running successfully...");
+    res.send("Es-Magico API is running perfectly on Render!");
 });
 
 const PORT = process.env.PORT || 8080;
