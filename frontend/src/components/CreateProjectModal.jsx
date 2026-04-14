@@ -1,19 +1,27 @@
 import { useState } from 'react';
-import API from '../api'; // Path check kar lena agar api/index.js hai toh '../api' chalega
+import API from '../api'; 
 import { X } from 'lucide-react';
 
 const CreateProjectModal = ({ isOpen, onClose, refreshProjects }) => {
     const [name, setName] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!name.trim()) return;
+
         try {
+            setIsSubmitting(true);
+           
             await API.post('/projects/create', { name });
             setName('');
             onClose();
-            refreshProjects();
+            refreshProjects(); 
         } catch (err) {
-            alert("Error creating project");
+            console.error("Project Create Error:", err.response?.data);
+            alert(err.response?.data?.msg || "Error creating project");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -32,13 +40,26 @@ const CreateProjectModal = ({ isOpen, onClose, refreshProjects }) => {
                         type="text" 
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                        className="w-full border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition text-slate-900" // text-slate-900 added for visibility
                         placeholder="e.g. Portfolio Website"
                         required
+                        disabled={isSubmitting}
                     />
                     <div className="mt-8 flex gap-3">
-                        <button type="button" onClick={onClose} className="flex-1 py-3 font-semibold text-slate-600 bg-slate-100 rounded-xl">Cancel</button>
-                        <button type="submit" className="flex-1 py-3 font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200">Create</button>
+                        <button 
+                            type="button" 
+                            onClick={onClose} 
+                            className="flex-1 py-3 font-semibold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            type="submit" 
+                            disabled={isSubmitting}
+                            className={`flex-1 py-3 font-semibold text-white rounded-xl shadow-lg transition-all ${isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-200'}`}
+                        >
+                            {isSubmitting ? 'Creating...' : 'Create Project'}
+                        </button>
                     </div>
                 </form>
             </div>
