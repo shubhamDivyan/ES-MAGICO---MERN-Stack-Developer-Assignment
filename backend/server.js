@@ -9,9 +9,8 @@ const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
 
-
+// 1. Database Connection
 connectDB();
-
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "https://es-magico-mern-stack-developer-assi.vercel.app");
@@ -19,14 +18,12 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     res.header("Access-Control-Allow-Credentials", "true");
 
+   
     if (req.method === "OPTIONS") {
-        return res.sendStatus(200);
+        return res.status(200).end();
     }
     next();
 });
-
-
-app.options('(.*)', cors());
 
 
 app.use(express.json());
@@ -35,7 +32,6 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
-
 
 app.get('/', (req, res) => {
     res.send("Es-Magico API is running perfectly on Render!");
